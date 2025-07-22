@@ -28,7 +28,7 @@ base {
 }
 
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
 }
 
 minecraft {
@@ -170,7 +170,8 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compileOnly fg.deobf(files("libs/Changed-m1.18.2-v0.14.1-all.jar"))
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation fg.deobf(files("libs/Changed-m1.18.2-v0.14.1-all.jar"))
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -211,5 +212,5 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }

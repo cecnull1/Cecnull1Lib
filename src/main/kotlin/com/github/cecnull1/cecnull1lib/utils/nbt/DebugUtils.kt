@@ -31,22 +31,12 @@ private fun printRecursive(tag: Tag, name: String, sb: StringBuilder, indent: In
 
 fun main() {
     val nbt = buildNBT {
-        putString("string", "Hello, World!")
-        putInt("int", 42)
-        putLong("long", 1234567890L)
-        putFloat("float", 3.14f)
-        putDouble("double", 2.71828)
-        putBoolean("boolean", true)
-        putSupported("compound", buildNBT {
-            putString("nestedString", "Nested Value")
-            putInt("nestedInt", 123)
-            put("nestedList", listTagOf {
-                int(1)
-                int(2)
-                int(3)
-                int(4)
-            })
+        set("e", buildNBT {
+            set("a", 1)
         })
     }
+    println(nbt.print())
+    nbt["e"].asCompoundTag()["e"] = 3
+    nbt["a"] = 123.toShort()
     println(nbt.print())
 }

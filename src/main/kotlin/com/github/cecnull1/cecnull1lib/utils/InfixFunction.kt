@@ -21,12 +21,11 @@ object InfixFunction {
         return null
     }
 
-    inline infix fun <T> Entity?.serverRun (f: (Entity) -> T?) : T? {
-        this ?: return null
-        if (!this.level.isClientSide) {
-            return f(this)
+    inline infix fun <reified T : Entity> T.serverRun(f: (T) -> Unit): T {
+        if (!this.level().isClientSide) {
+            f(this) // `this` 类型为 T（如 Player）
         }
-        return null
+        return this
     }
 
     inline infix fun <T> Level?.clientRun (f: (Level) -> T?) : T? {
@@ -37,11 +36,10 @@ object InfixFunction {
         return null
     }
 
-    inline infix fun <T> Entity?.clientRun (f: (Entity) -> T?) : T? {
-        this ?: return null
-        if (this.level.isClientSide) {
-            return f(this)
+    inline infix fun <reified T : Entity> T.clientRun(f: (T) -> Unit): T {
+        if (this.level().isClientSide) {
+            f(this) // `this` 类型为 T（如 Player）
         }
-        return null
+        return this
     }
 }

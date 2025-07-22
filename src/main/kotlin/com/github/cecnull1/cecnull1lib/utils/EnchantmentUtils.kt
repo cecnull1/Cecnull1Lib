@@ -1,4 +1,4 @@
-package com.github.cecnull1.cecnull1lib.utils.enchantment
+package com.github.cecnull1.cecnull1lib.utils
 
 import net.ltxprogrammer.changed.util.ItemUtil.getWearingItems
 import net.minecraft.world.entity.EquipmentSlot

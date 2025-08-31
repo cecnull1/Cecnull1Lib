@@ -8,6 +8,9 @@ import net.minecraft.core.Position
 import net.minecraft.core.Vec3i
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.phys.Vec3
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -65,22 +68,49 @@ data class KVec3(
     fun max() = maxOf(x, y, z)
     fun min() = minOf(x, y, z)
 
-    inline fun map(action: (Double) -> Double) = mapEach(action)
-    inline fun mapEach(action: (Double) -> Double) = KVec3(
-        action(x),
-        action(y),
-        action(z)
-    )
-    inline fun mapPairwise(action: (Double, Double) -> Double) = KVec3(
-        action(x, y),
-        action(y, z),
-        action(z, x)
-    )
-    inline fun mapAll(action: (Double, Double, Double) -> Double) = KVec3(
-        action(x, y, z),
-        action(y, z, x),
-        action(z, x, y)
-    )
+    @OptIn(ExperimentalContracts::class)
+    inline fun map(action: (Double) -> Double): KVec3 {
+        contract {
+            callsInPlace(action, InvocationKind.AT_LEAST_ONCE)
+        }
+        return mapEach(action)
+    }
+
+    @OptIn(ExperimentalContracts::class)
+    inline fun mapEach(action: (Double) -> Double): KVec3 {
+        contract {
+            callsInPlace(action, InvocationKind.AT_LEAST_ONCE)
+        }
+        return KVec3(
+            action(x),
+            action(y),
+            action(z)
+        )
+    }
+
+    @OptIn(ExperimentalContracts::class)
+    inline fun mapPairwise(action: (Double, Double) -> Double): KVec3 {
+        contract {
+            callsInPlace(action, InvocationKind.AT_LEAST_ONCE)
+        }
+        return KVec3(
+            action(x, y),
+            action(y, z),
+            action(z, x)
+        )
+    }
+
+    @OptIn(ExperimentalContracts::class)
+    inline fun mapAll(action: (Double, Double, Double) -> Double): KVec3 {
+        contract {
+            callsInPlace(action, InvocationKind.AT_LEAST_ONCE)
+        }
+        return KVec3(
+            action(x, y, z),
+            action(y, z, x),
+            action(z, x, y)
+        )
+    }
 
     companion object {
         val ZERO = KVec3(0.0, 0.0, 0.0)

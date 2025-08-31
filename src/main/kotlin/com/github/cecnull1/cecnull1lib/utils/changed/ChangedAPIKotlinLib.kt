@@ -10,6 +10,9 @@ import net.ltxprogrammer.changed.process.ProcessTransfur
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -113,21 +116,35 @@ fun Player.setPlayerTransfurVariant(
     return ProcessTransfur.setPlayerTransfurVariant(this, transfurData?.variant, transfurData?.context, progress, temporaryFromSuit)
 }
 
+@OptIn(ExperimentalContracts::class)
 inline fun Player.ifPlayerTransfurred(block: (variant: TransfurVariantInstance<*>) -> Unit): Boolean {
+    contract {
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+    }
     val variant = this.playerTransfurVariant
     if (variant != null) block(variant)
     return variant != null
 }
 
+@OptIn(ExperimentalContracts::class)
 inline fun Player.ifPlayerNotTransfurred(block: () -> Unit): Boolean {
+    contract {
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+    }
     val variant = this.playerTransfurVariant
     if (variant == null) block()
     return variant == null
 }
 
+@OptIn(ExperimentalContracts::class)
 inline fun <R> Player.withTransfurred(
     block: TransfurVariantInstance<*>.() -> R
-): R? = this.playerTransfurVariant?.block()
+): R? {
+    contract {
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+    }
+    return this.playerTransfurVariant?.block()
+}
 
 object TransfurContextUtils {
     sealed class TransfurContextType {
